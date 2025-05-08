@@ -155,7 +155,7 @@ typedef enum
 } while(0)
 #else
 #define LOG_DEBUG(__format, ...) do {\
-    int __offset;\
+    int __offset = 0;\
     char __message[MAX_KV_SIZE];\
     __MAKE_KVP(__message, __offset);\
     if (__offset > 0 &&__offset + 1 < MAX_FT_SIZE) {\
