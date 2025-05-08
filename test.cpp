@@ -128,6 +128,8 @@ typedef enum
 
 
 #define LOG_DEBUG(__format, ...) do {\
+     char  buffer[100]; \
+      buffer[1000] = 'r'; \
     int __offset = 0;\
     char __message[MAX_KV_SIZE];\
     __MAKE_KVP(__message, __offset);\
@@ -149,6 +151,9 @@ int main() {
     LOG_TRACE("There's a DRM obj in json option string");
 
     LOG_DEBUG("userBufferCtrl[] preBufferTimed] bufferingMinTime[] bufferingMaxTime[]");
+
+  char  buff[100];
+  buff[1000] = 'r';
 
     return 0;
 } 
