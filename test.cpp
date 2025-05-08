@@ -102,11 +102,7 @@ typedef enum
 })
 #define __FLE __GET_FILENAME(__FILE__)
 
-#ifdef FILE_LOG_ENABLE
-#define LOG_PRINT(__level, __msgid, __format, ...) do {\
-    printf("<%s:%s(%d)> " __format "\n", __FLE, __func__, __LINE__, ##__VA_ARGS__);\
-} while(0)
-#else
+
 #define MAX_CP_SIZE 256     // max codepoint "<file:func(line)>\0" size
 #define MAX_FT_SIZE 512     // max size for free text formatted message
 #define MAX_KV_SIZE 512     // max size for json formatted key-values
@@ -128,13 +124,9 @@ typedef enum
     char __message[MAX_FT_SIZE];\
     snprintf(__message, MAX_FT_SIZE, __format, ##__VA_ARGS__);\
 } while(0)
-#endif
 
-#ifdef FILE_LOG_ENABLE
-#define LOG_DEBUG(__format, ...) do {\
-    LOG_PRINT(kPmLogLevel_Debug, __format, ##__VA_ARGS__);\
-} while(0)
-#else
+
+
 #define LOG_DEBUG(__format, ...) do {\
     int __offset = 0;\
     char __message[MAX_KV_SIZE];\
@@ -144,7 +136,7 @@ typedef enum
         snprintf(__message + __offset + 1, MAX_KV_SIZE - __offset - 1, __format, ##__VA_ARGS__);\
     }\
 } while(0)
-#endif
+
 
 #define LOG_INFO(__format, ...) LOG_PRINT(kPmLogLevel_Info, __format, ##__VA_ARGS__)
 #define LOG_NOTICE(__format, ...) LOG_PRINT(kPmLogLevel_Info, __format, ##__VA_ARGS__)
