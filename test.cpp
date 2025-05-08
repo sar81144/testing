@@ -132,7 +132,7 @@ typedef enum
 } while(0)
 
 #define LOG_PRINT(__level, __format, ...) do {\
-    int __offset;\
+    int __offset = 0;\
     char __kvp[MAX_KV_SIZE];\
     __MAKE_KVP(__kvp, __offset);\
     char __message[MAX_FT_SIZE];\
