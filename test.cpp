@@ -98,17 +98,13 @@ typedef enum
 
 // Modified code for fixing 468276, strchr null check return value
 #define __GET_FILENAME(path) ({ \
-    const char* __p = strrchr((path), '/'); \
-    __p ? (__p + 1) : (path); \
+    strrchr((path), '/') ? (strrchr((path), '/') + 1) : (path); \
 })
 #define __FLE __GET_FILENAME(__FILE__)
 
 #ifdef FILE_LOG_ENABLE
 #define LOG_PRINT(__level, __msgid, __format, ...) do {\
-    int codePointBufferSize = printf("<%s:%s(%d)> " __format "\n", __FLE, __func__, __LINE__, ##__VA_ARGS__);\
-    if (codePointBufferSize < 0) {\
-        cout<<"snprintf failed"<<endl;\
-    }\
+    printf("<%s:%s(%d)> " __format "\n", __FLE, __func__, __LINE__, ##__VA_ARGS__);\
 } while(0)
 #else
 #define MAX_CP_SIZE 256     // max codepoint "<file:func(line)>\0" size
@@ -116,19 +112,13 @@ typedef enum
 #define MAX_KV_SIZE 512     // max size for json formatted key-values
 
 #define __CODEPOINT(__codepoint, __file, __func, __line) do {\
-    int codePointBufferSize = snprintf(__codepoint, MAX_CP_SIZE, "<%s:%s(%d)>", __file, __func, __line);\
-    if (codePointBufferSize < 0 || codePointBufferSize >= MAX_CP_SIZE) {\
-        cout<<"snprintf failed"<<endl;\
-    }\
+    snprintf(__codepoint, MAX_CP_SIZE, "<%s:%s(%d)>", __file, __func, __line);\
 } while(0)
 
 #define __MAKE_KVP(__kvp, __offset) do {\
     char __codepoint[MAX_CP_SIZE];\
     __CODEPOINT(__codepoint, __FLE, __func__, __LINE__);\
     __offset = snprintf(__kvp, MAX_KV_SIZE, "{\"%s\":\"%s\"}", KVP_CODE_POINT, __codepoint);\
-    if (__offset < 0 || __offset >= MAX_KV_SIZE) {\
-        cout<<"snprintf failed"<<endl;\
-    }\
 } while(0)
 
 #define LOG_PRINT(__level, __format, ...) do {\
@@ -136,16 +126,7 @@ typedef enum
     char __kvp[MAX_KV_SIZE];\
     __MAKE_KVP(__kvp, __offset);\
     char __message[MAX_FT_SIZE];\
-    int logSize = snprintf(__message, MAX_FT_SIZE, __format, ##__VA_ARGS__);\
-    if (logSize < 0 || logSize >= MAX_FT_SIZE) {\
-        cout<<"snprintf failed"<<endl;\
-    } else {\
-        if (__level == kPmLogLevel_Debug) {\
-            cout<<"snprintf failed"<<endl;\
-        } else {\
-            cout<<"snprintf failed"<<endl;\
-        }\
-    }\
+    snprintf(__message, MAX_FT_SIZE, __format, ##__VA_ARGS__);\
 } while(0)
 #endif
 
@@ -160,12 +141,7 @@ typedef enum
     __MAKE_KVP(__message, __offset);\
     if (__offset >= 0 &&__offset < 512 && __offset + 1 < MAX_KV_SIZE) {\
         __message[__offset] = ' ';\
-        int __logSize = snprintf(__message + __offset + 1, MAX_KV_SIZE - __offset - 1, __format, ##__VA_ARGS__);\
-        if (__logSize >= 0 && __logSize < (MAX_KV_SIZE - __offset - 1)) {\
-            cout<<"snprintf failed"<<endl;\
-        } else {\
-            cout<<"snprintf failed"<<endl;\
-        }\
+        snprintf(__message + __offset + 1, MAX_KV_SIZE - __offset - 1, __format, ##__VA_ARGS__);\
     }\
 } while(0)
 #endif
