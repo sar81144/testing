@@ -158,7 +158,7 @@ typedef enum
     int __offset = 0;\
     char __message[MAX_KV_SIZE];\
     __MAKE_KVP(__message, __offset);\
-    if (__offset >= 0 &&__offset + 1 < MAX_KV_SIZE) {\
+    if (__offset >= 0 &&__offset < 512 && __offset + 1 < MAX_KV_SIZE) {\
         __message[__offset] = ' ';\
         int __logSize = snprintf(__message + __offset + 1, MAX_KV_SIZE - __offset - 1, __format, ##__VA_ARGS__);\
         if (__logSize >= 0 && __logSize < (MAX_KV_SIZE - __offset - 1)) {\
